@@ -1,16 +1,35 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import jobListings from "@/utils/jobs.json";
-import { ref } from "vue";
-import JobCard from "./JobListing.vue";
+import { onMounted, reactive } from "vue";
+import JobListing from "./JobListing.vue";
+import Spinner from "@/components/Spinner.vue";
+import axios from "axios";
 
-const jobs = ref(jobListings);
 const props = defineProps({
   limit: Number,
   showBtn: {
     type: Boolean,
     default: false,
   },
+});
+const state = reactive({
+  jobs: [],
+  isLoading: true,
+});
+
+onMounted(async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/jobs", {
+      params: {
+        _limit: props.limit,
+      },
+    });
+    state.jobs = response.data;
+  } catch (error) {
+    console.error("Error fetching jobs");
+  } finally {
+    state.isLoading = false;
+  }
 });
 </script>
 
@@ -20,12 +39,9 @@ const props = defineProps({
       <h2 class="text-3xl font-bold text-green-500 mb-6 text-center">
         Browse Jobs
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <JobCard
-          v-for="job in jobs.slice(0, limit || jobs.length)"
-          :key="job.id"
-          :job="job"
-        />
+      <Spinner v-if="state.isLoading" />
+      <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <JobListing v-for="job in state.jobs" :key="job.id" :job="job" />
       </div>
     </div>
   </section>
