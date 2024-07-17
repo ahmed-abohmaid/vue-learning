@@ -1,8 +1,10 @@
 <script setup>
 import { RouterLink, useRoute } from "vue-router";
-import { ref, reactive, onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 import axios from "axios";
 import Spinner from "@/components/Spinner.vue";
+import BackButton from "@/components/BackButton.vue";
+
 const jobId = useRoute().params.id;
 
 const state = reactive({
@@ -23,6 +25,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <BackButton />
   <Spinner v-if="state.isLoading" />
   <section v-else class="bg-green-50">
     <div class="container m-auto py-10 px-6">
@@ -33,13 +36,9 @@ onMounted(async () => {
           >
             <div class="text-gray-500 mb-4">{{ state.job.type }}</div>
             <h1 class="text-3xl font-bold mb-4">{{ state.job.title }}</h1>
-            <div
-              class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start"
-            >
-              <i
-                class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"
-              ></i>
-              <p class="text-orange-700">{{ state.job.location }}</p>
+            <div class="text-orange-700 mb-3">
+              <i class="pi pi-map-marker"></i>
+              {{ state.job.location }}
             </div>
           </div>
 
@@ -89,7 +88,7 @@ onMounted(async () => {
           <div class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
             <RouterLink
-              :to="`/jobs/edit/${jobId}`"
+              :to="`/jobs/edit/${state.job.id}`"
               class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
               >Edit Job</RouterLink
             >
