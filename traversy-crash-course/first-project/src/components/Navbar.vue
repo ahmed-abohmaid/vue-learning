@@ -1,6 +1,5 @@
 <script setup>
 import logo from "@/assets/images/logo.png";
-// import { onMounted, ref } from "vue";
 </script>
 
 <template>
