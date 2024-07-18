@@ -111,6 +111,20 @@
         "contactPhone": "dfhdfhdfhdf",
         "contactEmail": "test@test.com"
       }
+    },
+    {
+      "type": "Part-Time",
+      "title": "sdgsd",
+      "description": "sdg",
+      "salary": "$80K - $90K",
+      "location": "sdgsdg",
+      "company": {
+        "name": "sdggsd",
+        "description": "sdgsdg",
+        "contactPhone": "sdgsdggsd",
+        "contactEmail": "test@test.com"
+      },
+      "id": "6bcf"
     }
   ]
 }

@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -11,7 +11,7 @@ const isFetchLoading = ref(true);
 const isSubmitLoading = ref(false);
 const job = reactive({
   type: "Full-Time",
-  name: "",
+  title: "",
   description: "",
   salary: "",
   location: "",
@@ -23,12 +23,14 @@ const job = reactive({
   },
 });
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+const handleSubmit = async () => {
+  const url = jobId
+    ? `http://localhost:5000/jobs/${jobId}`
+    : "http://localhost:5000/jobs";
 
   try {
     isSubmitLoading.value = true;
-    const res = await axios("http://localhost:5000/jobs", {
+    const res = await axios(url, {
       method: jobId ? "PUT" : "POST",
       data: job,
     });
@@ -48,7 +50,7 @@ onMounted(() => {
       .get(`http://localhost:5000/jobs/${jobId}`)
       .then((res) => {
         job.type = res.data.type;
-        job.name = res.data.name;
+        job.title = res.data.title;
         job.description = res.data.description;
         job.salary = res.data.salary;
         job.location = res.data.location;
@@ -62,6 +64,13 @@ onMounted(() => {
       })
       .finally(() => (isFetchLoading.value = false));
   }
+});
+
+const buttonText = computed(() => {
+  if (isSubmitLoading.value) {
+    return jobId ? "Updating Job..." : "Adding Job...";
+  }
+  return jobId ? "Update Job" : "Add Job";
 });
 </script>
 
@@ -97,7 +106,7 @@ onMounted(() => {
               >Job Listing Name</label
             >
             <input
-              v-model="job.name"
+              v-model="job.title"
               type="text"
               id="name"
               name="name"
@@ -227,7 +236,7 @@ onMounted(() => {
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Add Job
+              {{ buttonText }}
             </button>
           </div>
         </form>
