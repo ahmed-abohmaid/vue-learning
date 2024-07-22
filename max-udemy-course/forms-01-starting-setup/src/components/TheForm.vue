@@ -1,5 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
+import RatingControl from './RatingControl.vue';
 
 const formData = reactive({
   userName: '',
@@ -7,6 +8,7 @@ const formData = reactive({
   referrer: 'google',
   interests: [],
   how: null,
+  rating: null,
 });
 
 const handleSubmit = () => {
@@ -102,6 +104,10 @@ const handleSubmit = () => {
         />
         <label for="how-other">Other</label>
       </div>
+    </div>
+
+    <div>
+      <RatingControl v-model="formData.rating" />
     </div>
     <div>
       <button>Save Data</button>
