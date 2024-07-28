@@ -10,12 +10,18 @@
   <div class="container">
     <button @click="showDialog">Show Dialog</button>
   </div>
-</template>  
+  <div class="container">
+    <transition>
+      <p v-if="togglePara">Paragraph toggled...</p>
+    </transition>
+    <button @click="toggleParagraph">Toggle Paragraph</button>
+  </div>
+</template>
 
 <script>
 export default {
   data() {
-    return { dialogIsVisible: false };
+    return { dialogIsVisible: false, togglePara: false };
   },
   methods: {
     showDialog() {
@@ -23,6 +29,9 @@ export default {
     },
     hideDialog() {
       this.dialogIsVisible = false;
+    },
+    toggleParagraph() {
+      this.togglePara = !this.togglePara;
     },
   },
 };
@@ -68,5 +77,33 @@ button:active {
   padding: 2rem;
   border: 2px solid #ccc;
   border-radius: 12px;
+}
+
+.v-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.v-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.v-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.v-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
 }
 </style>
