@@ -1,7 +1,7 @@
 <template>
   <div class="backdrop" @click="$emit('close')" v-if="isVisible"></div>
   <transition
-    name="modal"
+    :css="false"
     @before-enter="beforeEnter"
     @enter="enter"
     @before-leave="beforeLeave"
