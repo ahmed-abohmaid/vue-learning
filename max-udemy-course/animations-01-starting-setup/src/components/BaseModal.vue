@@ -1,6 +1,14 @@
 <template>
   <div class="backdrop" @click="$emit('close')" v-if="isVisible"></div>
-  <transition name="modal">
+  <transition
+    name="modal"
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @enter-cancelled="onEnterCancelled"
+    @leave-cancelled="onLeaveCancelled"
+  >
     <dialog open v-if="isVisible">
       <slot></slot>
     </dialog>
@@ -11,6 +19,50 @@
 export default {
   props: ['isVisible'],
   emits: ['close'],
+  data() {
+    return {
+      enterInterval: null,
+      leaveInterval: null,
+    };
+  },
+  methods: {
+    beforeEnter(el) {
+      el.style.opacity = 0;
+    },
+    enter(el, done) {
+      let round = 1;
+      this.enterInterval = setInterval(() => {
+        if (round < 10) {
+          el.style.opacity = round * 0.1;
+          round++;
+        } else {
+          clearInterval(this.enterInterval);
+          done();
+        }
+      }, 20);
+    },
+    beforeLeave(el) {
+      el.style.opacity = 1;
+    },
+    leave(el, done) {
+      let round = 10;
+      this.leaveInterval = setInterval(() => {
+        if (round > 1) {
+          el.style.opacity = round * 0.1;
+          round--;
+        } else {
+          clearInterval(this.leaveInterval);
+          done();
+        }
+      }, 20);
+    },
+    onEnterCancelled() {
+      clearInterval(this.enterInterval);
+    },
+    onLeaveCancelled() {
+      clearInterval(this.leaveInterval);
+    },
+  },
 };
 </script>
 
@@ -39,13 +91,13 @@ dialog {
   border: none;
 }
 
-.modal-enter-active {
+/* .modal-enter-active {
   animation: fade-scale 0.3s ease-out;
 }
 
 .modal-leave-active {
   animation: fade-scale 0.2s ease-in reverse;
-}
+} */
 
 @keyframes fade-scale {
   from {
