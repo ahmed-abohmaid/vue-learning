@@ -11,9 +11,24 @@ export const store = createStore({
       state.count += payload.value;
     },
   },
+  actions: {
+    increment(context, { value }) {
+      setTimeout(
+        () => {
+          // context.commit({
+          //   type: 'increment',
+          //   value,
+          // });
+          context.state.count += value
+        },
+
+        2000
+      );
+    },
+  },
   getters: {
     finalCount(state) {
-      return state.count * 2;
+      return state.count + ' clicks';
     },
     normalizedCount(_, getters) {
       const finalCount = getters.finalCount;
