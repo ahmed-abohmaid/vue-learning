@@ -1,5 +1,5 @@
 <template>
-  <h3>{{ count }}</h3>
+  <h3>{{ count }} (Favorite)</h3>
 </template>
 
 <script>
