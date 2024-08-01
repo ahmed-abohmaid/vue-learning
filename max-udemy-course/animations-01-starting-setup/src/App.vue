@@ -1,5 +1,11 @@
 <template>
-  <div class="container">
+  <RouterView v-slot="{ Component }">
+    <transition name="route" mode="out-in">
+      <Component :is="Component" />
+    </transition>
+  </RouterView>
+
+  <!-- <div class="container">
     <UsersList />
   </div>
   <div class="container">
@@ -18,15 +24,17 @@
       <p v-if="togglePara">Paragraph toggled...</p>
     </transition>
     <button @click="toggleParagraph">Toggle Paragraph</button>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import UsersList from './components/UsersList.vue';
+import { RouterView } from 'vue-router';
+// import UsersList from './components/UsersList.vue';
 
 export default {
   components: {
-    UsersList,
+    // UsersList,
+    RouterView,
   },
   data() {
     return { dialogIsVisible: false, togglePara: false };
@@ -87,30 +95,36 @@ button:active {
   border-radius: 12px;
 }
 
-.para-enter-from {
+.para-enter-from,
+.route-enter-from {
   opacity: 0;
   transform: translateY(-30px);
 }
 
-.para-enter-active {
+.para-enter-active,
+.route-enter-active {
   transition: all 0.3s ease-out;
 }
 
-.para-enter-to {
+.para-enter-to,
+.route-enter-to {
   opacity: 1;
   transform: translateY(0);
 }
 
-.para-leave-from {
+.para-leave-from,
+.route-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
 
-.para-leave-active {
+.para-leave-active,
+.route-leave-active {
   transition: all 0.2s ease-in;
 }
 
-.para-leave-to {
+.para-leave-to,
+.route-leave-to {
   opacity: 0;
   transform: translateY(-30px);
 }
