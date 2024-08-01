@@ -1,13 +1,16 @@
 <template>
-  <h3>{{ count }} (Favorite)</h3>
+  <h3>{{ normalizedCount }} (Favorite)</h3>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   computed: {
-    count() {
-      return this.$store.getters.normalizedCount;
-    },
+    // count() {
+    //   return this.$store.getters.normalizedCount;
+    // },
+    ...mapGetters(['normalizedCount']),
   },
 };
 </script>

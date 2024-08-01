@@ -3,7 +3,7 @@
     <NormalCount />
     <FavoriteCount />
     <button @click="addOne">Add One</button>
-    <button @click="addTwo">Add Two</button>
+    <button @click="increase({ value: 2 })">Add Two</button>
   </base-container>
 </template>
 
@@ -11,6 +11,7 @@
 import BaseContainer from './components/BaseContainer.vue';
 import NormalCount from './components/NormalCount.vue';
 import FavoriteCount from './components/FavoriteCount.vue';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -26,10 +27,14 @@ export default {
         value: 1,
       });
     },
-    addTwo() {
-      // this.$store.commit('increment', { value: 2 });
-      this.$store.dispatch('increment', { value: 2 });
-    },
+    // addTwo() {
+    //   // this.$store.commit('increment', { value: 2 });
+    //   this.$store.dispatch('increment', { value: 2 });
+    // },
+    // ...mapActions(['increment']),
+    ...mapActions({
+      increase: 'increment',
+    }),
   },
 };
 </script>
