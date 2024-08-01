@@ -1,10 +1,12 @@
 <template>
-  <base-container title="Vuex">
+  <base-container title="Vuex" v-if="isAuthenticated">
     <NormalCount />
     <FavoriteCount />
     <button @click="addOne">Add One</button>
     <button @click="increase({ value: 2 })">Add Two</button>
   </base-container>
+
+  <Auth />
 </template>
 
 <script>
@@ -12,12 +14,19 @@ import BaseContainer from './components/BaseContainer.vue';
 import NormalCount from './components/NormalCount.vue';
 import FavoriteCount from './components/FavoriteCount.vue';
 import { mapActions } from 'vuex';
+import Auth from './components/Auth/Auth.vue';
 
 export default {
   components: {
     BaseContainer,
     NormalCount,
     FavoriteCount,
+    Auth,
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.state.isLoggedIn;
+    },
   },
   methods: {
     addOne() {
