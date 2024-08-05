@@ -32,7 +32,7 @@ export default {
     addOne() {
       // this.$store.commit('increment', 1);
       this.$store.commit({
-        type: 'increment',
+        type: 'counter/increment',
         value: 1,
       });
     },
@@ -41,7 +41,7 @@ export default {
     //   this.$store.dispatch('increment', { value: 2 });
     // },
     // ...mapActions(['increment']),
-    ...mapActions({
+    ...mapActions('counter', {
       increase: 'increment',
     }),
   },
