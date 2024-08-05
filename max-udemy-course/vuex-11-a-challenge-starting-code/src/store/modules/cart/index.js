@@ -6,7 +6,7 @@ export default {
     };
   },
   mutations: {
-    addProductToCart({ cart }, productData) {
+    addProductToCart({ cart }, { productData }) {
       const productInCartIndex = cart.items.findIndex(
         (ci) => ci.productId === productData.id
       );
@@ -27,7 +27,7 @@ export default {
       cart.total += productData.price;
     },
 
-    removeProductFromCart({ cart }, prodId) {
+    removeProductFromCart({ cart }, { prodId }) {
       const productInCartIndex = cart.items.findIndex(
         (cartItem) => cartItem.productId === prodId
       );

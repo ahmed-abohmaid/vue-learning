@@ -16,20 +16,24 @@
 
 <script>
 import ProductItem from '../components/products/ProductItem.vue';
+import { mapState } from 'vuex';
 
 export default {
-  inject: ['products'],
+  // inject: ['products'],
   components: {
     ProductItem,
+  },
+  computed: {
+    ...mapState(['products']),
   },
 };
 </script>
 
 <style scoped>
-  ul {
-    list-style: none;
-    margin: 2rem auto;
-    padding: 0;
-    max-width: 40rem;
-  }
+ul {
+  list-style: none;
+  margin: 2rem auto;
+  padding: 0;
+  max-width: 40rem;
+}
 </style>
