@@ -1,3 +1,5 @@
+import router from '../../../router';
+
 const apiKey = process.env.VUE_APP_API_KEY;
 
 export default {
@@ -29,6 +31,7 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
+        router.push('/coaches');
       }
     } catch (error) {
       state.error = error.message;
@@ -64,6 +67,7 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
+        router.push('/coaches');
       }
     } catch (error) {
       state.error = error.message;
