@@ -75,4 +75,12 @@ export default {
       state.isLoading = false;
     }
   },
+  logout({ commit }) {
+    commit('setUser', {
+      token: null,
+      userId: null,
+      tokenExpiration: null,
+    });
+    router.push('/');
+  },
 };

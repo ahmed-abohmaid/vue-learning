@@ -22,7 +22,9 @@
             to="/register"
             >Register as Coach</base-button
           >
-          <base-button v-if="!isAuthenticated" link to="/auth">Login</base-button>
+          <base-button v-if="!isAuthenticated" link to="/auth"
+            >Login</base-button
+          >
         </div>
         <div v-if="isLoading">
           <base-spinner></base-spinner>

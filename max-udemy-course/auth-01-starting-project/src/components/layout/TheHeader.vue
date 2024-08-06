@@ -14,6 +14,11 @@
           >
           <router-link to="/auth" v-else>Login</router-link>
         </li>
+        <li>
+          <base-button v-if="isAuthenticated" @click="handleLogout"
+            >Logout</base-button
+          >
+        </li>
       </ul>
     </nav>
   </header>
@@ -24,7 +29,9 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
+
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
+const handleLogout = () => store.dispatch('logout');
 </script>
 
 <style scoped>
