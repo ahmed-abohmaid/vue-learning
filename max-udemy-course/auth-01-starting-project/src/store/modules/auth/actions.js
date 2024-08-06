@@ -31,7 +31,7 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
-        router.push('/coaches');
+        router.replace('/coaches');
       }
     } catch (error) {
       state.error = error.message;
@@ -67,7 +67,7 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
-        router.push('/coaches');
+        router.replace('/coaches');
       }
     } catch (error) {
       state.error = error.message;
@@ -81,6 +81,6 @@ export default {
       userId: null,
       tokenExpiration: null,
     });
-    router.push('/');
+    router.replace('/');
   },
 };
