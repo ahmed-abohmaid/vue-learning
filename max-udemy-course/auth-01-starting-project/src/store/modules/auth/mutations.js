@@ -4,4 +4,7 @@ export default {
     state.userId = userId;
     state.tokenExpiration = tokenExpiration;
   },
+  resetAuthError(state) {
+    state.error = null;
+  }
 };

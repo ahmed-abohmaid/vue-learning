@@ -1,36 +1,52 @@
 <template>
-  <base-card>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-control">
-        <label for="email">Email</label>
-        <input
-          type="text"
-          id="email"
-          v-model.trim="formData.email"
-          @focus="resetValidation"
-        />
-      </div>
-      <div class="form-control">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          v-model.trim="formData.password"
-          @focus="resetValidation"
-        />
-      </div>
-      <div class="buttons">
-        <base-button>{{ buttonCaption }}</base-button>
-        <base-button type="button" mode="flat" @click="switchMode">{{
-          SwitchButtonCaption
-        }}</base-button>
-      </div>
+  <div>
+    <BaseDialog
+      :show="!!store.getters.authError"
+      title="An error occurred"
+      @close="resetAuthError"
+    >
+      <p>{{ store.getters.authError }}</p>
+    </BaseDialog>
+    <BaseDialog
+      :show="store.getters.isAuthLoading"
+      title="Authenticating..."
+      fixed
+    >
+      <BaseSpinner />
+    </BaseDialog>
+    <base-card>
+      <form @submit.prevent="handleSubmit">
+        <div class="form-control">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            id="email"
+            v-model.trim="formData.email"
+            @focus="resetValidation"
+          />
+        </div>
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            v-model.trim="formData.password"
+            @focus="resetValidation"
+          />
+        </div>
+        <div class="buttons">
+          <base-button>{{ buttonCaption }}</base-button>
+          <base-button type="button" mode="flat" @click="switchMode">{{
+            SwitchButtonCaption
+          }}</base-button>
+        </div>
 
-      <p v-if="!formData.isFormValid" style="color: red">
-        Please enter a valid email and a password with at least 6 characters.
-      </p>
-    </form>
-  </base-card>
+        <p v-if="!formData.isFormValid" style="color: red">
+          Please enter a valid email and a password with at least 6 characters.
+        </p>
+      </form>
+    </base-card>
+  </div>
 </template>
 
 <script setup>
@@ -76,12 +92,18 @@ const switchMode = () =>
   (formData.mode = formData.mode === 'login' ? 'signup' : 'login');
 
 const buttonCaption = computed(() =>
-  formData.mode === 'login' ? 'Login' : 'Signup'
+  store.getters.isAuthLoading
+    ? 'Submitting...'
+    : formData.mode === 'login'
+    ? 'Login'
+    : 'Signup'
 );
 
 const SwitchButtonCaption = computed(
   () => `${formData.mode === 'login' ? 'Signup' : 'Login'} Instead`
 );
+
+const resetAuthError = () => store.commit('resetAuthError');
 </script>
 
 <style scoped>
