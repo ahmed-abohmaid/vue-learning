@@ -17,16 +17,17 @@ export default {
       }
     );
 
-    // const responseData = await response.json();
+    const responseData = await response.json();
 
     if (!response.ok) {
-      // error ...
+      const error = new Error(responseData.error || 'Failed to send request.');
+      throw error;
+    } else {
+      context.commit('registerCoach', {
+        ...coachData,
+        id: userId,
+      });
     }
-
-    context.commit('registerCoach', {
-      ...coachData,
-      id: userId,
-    });
   },
   async loadCoaches(context, payload) {
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
@@ -39,7 +40,7 @@ export default {
     const responseData = await response.json();
 
     if (!response.ok) {
-      const error = new Error(responseData.message || 'Failed to fetch!');
+      const error = new Error(responseData.error || 'Failed to fetch!');
       throw error;
     }
 
