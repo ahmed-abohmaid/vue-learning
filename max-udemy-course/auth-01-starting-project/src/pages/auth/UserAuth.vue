@@ -35,6 +35,9 @@
 
 <script setup>
 import { computed, reactive } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const formData = reactive({
   email: '',
@@ -53,7 +56,18 @@ const handleSubmit = () => {
     formData.isFormValid = false;
     return;
   }
-  console.log('Submitted!', formData.email, formData.password);
+
+  if (formData.mode === 'login') {
+    store.dispatch('login', {
+      email: formData.email,
+      password: formData.password,
+    });
+  } else {
+    store.dispatch('signup', {
+      email: formData.email,
+      password: formData.password,
+    });
+  }
 };
 
 const resetValidation = () => (formData.isFormValid = true);
