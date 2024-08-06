@@ -31,7 +31,10 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
-        router.replace('/coaches');
+
+        const redirectUrl =
+          '/' + router.currentRoute.value.query.redirect || '/coaches';
+        router.replace(redirectUrl);
       }
     } catch (error) {
       state.error = error.message;
@@ -67,7 +70,10 @@ export default {
           userId: responseData.localId,
           tokenExpiration: responseData.expiresIn,
         });
-        router.replace('/coaches');
+
+        const redirectUrl =
+          '/' + router.currentRoute.value.query.redirect || '/coaches';
+        router.replace(redirectUrl);
       }
     } catch (error) {
       state.error = error.message;
