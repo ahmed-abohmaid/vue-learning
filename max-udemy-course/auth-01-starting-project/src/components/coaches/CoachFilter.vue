@@ -64,4 +64,20 @@ h2 {
 .filter-option.active label {
   font-weight: bold;
 }
+
+input[type='checkbox'] + label {
+  font-weight: normal;
+  display: inline;
+  margin: 0 0 0 0.5rem;
+}
+
+input[type='checkbox'] {
+  display: inline;
+  width: auto;
+  border: none;
+}
+
+input[type='checkbox']:focus {
+  outline: #3d008d solid 1px;
+}
 </style>
