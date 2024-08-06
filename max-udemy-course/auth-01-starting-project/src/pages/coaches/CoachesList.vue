@@ -1,6 +1,10 @@
 <template>
   <div>
-    <base-dialog :show="!!error" title="An error occurred!" @close="handleError">
+    <base-dialog
+      :show="!!error"
+      title="An error occurred!"
+      @close="handleError"
+    >
       <p>{{ error }}</p>
     </base-dialog>
     <section>
@@ -9,8 +13,16 @@
     <section>
       <base-card>
         <div class="controls">
-          <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
-          <base-button v-if="!isCoach && !isLoading" link to="/register">Register as Coach</base-button>
+          <base-button mode="outline" @click="loadCoaches(true)"
+            >Refresh</base-button
+          >
+          <base-button
+            v-if="isAuthenticated && !isCoach && !isLoading"
+            link
+            to="/register"
+            >Register as Coach</base-button
+          >
+          <base-button v-else link to="/auth">Login</base-button>
         </div>
         <div v-if="isLoading">
           <base-spinner></base-spinner>
@@ -35,6 +47,7 @@
 <script>
 import CoachItem from '../../components/coaches/CoachItem.vue';
 import CoachFilter from '../../components/coaches/CoachFilter.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -53,6 +66,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['isAuthenticated']),
     isCoach() {
       return this.$store.getters['coaches/isCoach'];
     },

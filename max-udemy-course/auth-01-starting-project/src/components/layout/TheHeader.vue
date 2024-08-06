@@ -9,12 +9,23 @@
           <router-link to="/coaches">All Coaches</router-link>
         </li>
         <li>
-          <router-link to="/requests">Requests</router-link>
+          <router-link to="/requests" v-if="isAuthenticated"
+            >Requests</router-link
+          >
+          <router-link to="/auth" v-else>Login</router-link>
         </li>
       </ul>
     </nav>
   </header>
 </template>
+
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
+</script>
 
 <style scoped>
 header {
