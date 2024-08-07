@@ -3,38 +3,51 @@ import router from '../../../router';
 const apiKey = process.env.VUE_APP_API_KEY;
 
 export default {
-  async login({ commit, state }, { email, password }) {
+  async login({ dispatch }, { email, password }) {
+    return dispatch('authLogic', { email, password, isLogin: true });
+  },
+  async signup({ dispatch }, { email, password }) {
+    return dispatch('authLogic', { email, password, isLogin: false });
+  },
+  async authLogic({ commit, state }, payload) {
     try {
       state.isLoading = true;
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            email,
-            password,
-            returnSecureToken: true,
-          }),
-        }
-      );
+      const { email, password, isLogin } = payload;
+      let url = isLogin
+        ? `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
+        : `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
+      });
 
       const responseData = await response.json();
 
       if (!response.ok) {
         const error = new Error(
-          responseData.error.message || 'Failed to submit your data.'
+          responseData.error.message ||
+            'Failed to authenticate. Check your login data.'
         );
         throw error;
       } else {
+        const expiresIn = +responseData.expiresIn * 1000; // convert to milliseconds
+        const expirationDate = new Date().getTime() + expiresIn;
+
+        localStorage.setItem('token', responseData.idToken);
+        localStorage.setItem('userId', responseData.localId);
+        localStorage.setItem('tokenExpiration', expirationDate);
+
         commit('setUser', {
           token: responseData.idToken,
           userId: responseData.localId,
-          tokenExpiration: responseData.expiresIn,
+          tokenExpiration: expirationDate,
         });
-
-        const redirectUrl =
-          '/' + router.currentRoute.value.query.redirect || '/coaches';
-        router.replace(redirectUrl);
+        router.replace('/coaches');
       }
     } catch (error) {
       state.error = error.message;
@@ -42,44 +55,22 @@ export default {
       state.isLoading = false;
     }
   },
-  async signup({ commit, state }, { email, password }) {
-    try {
-      state.isLoading = true;
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            email,
-            password,
-            returnSecureToken: true,
-          }),
-        }
-      );
+  tryLogin({ commit }) {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
 
-      const responseData = await response.json();
+    const expiresIn = +tokenExpiration - new Date().getTime();
 
-      if (!response.ok) {
-        const error = new Error(
-          responseData.error.message || 'Failed to submit your data.'
-        );
-        throw error;
-      } else {
-        commit('setUser', {
-          token: responseData.idToken,
-          userId: responseData.localId,
-          tokenExpiration: responseData.expiresIn,
-        });
-
-        const redirectUrl =
-          '/' + router.currentRoute.value.query.redirect || '/coaches';
-        router.replace(redirectUrl);
-      }
-    } catch (error) {
-      state.error = error.message;
-    } finally {
-      state.isLoading = false;
+    if (expiresIn < 0) {
+      return;
     }
+
+    commit('setUser', {
+      token,
+      userId,
+      tokenExpiration,
+    });
   },
   logout({ commit }) {
     commit('setUser', {
@@ -87,6 +78,9 @@ export default {
       userId: null,
       tokenExpiration: null,
     });
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('tokenExpiration');
     router.replace('/');
   },
 };
