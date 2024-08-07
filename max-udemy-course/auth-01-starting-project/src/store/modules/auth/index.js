@@ -7,7 +7,6 @@ export default {
     return {
       token: null,
       userId: null,
-      tokenExpiration: null,
       isLoading: false,
       error: null,
     };

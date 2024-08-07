@@ -1,6 +1,7 @@
 import router from '../../../router';
 
 const apiKey = process.env.VUE_APP_API_KEY;
+let timer;
 
 export default {
   async login({ dispatch }, { email, password }) {
@@ -9,7 +10,7 @@ export default {
   async signup({ dispatch }, { email, password }) {
     return dispatch('authLogic', { email, password, isLogin: false });
   },
-  async authLogic({ commit, state }, payload) {
+  async authLogic({ commit, dispatch, state }, payload) {
     try {
       state.isLoading = true;
       const { email, password, isLogin } = payload;
@@ -42,6 +43,10 @@ export default {
         localStorage.setItem('userId', responseData.localId);
         localStorage.setItem('tokenExpiration', expirationDate);
 
+        timer = setTimeout(() => {
+          dispatch('logout');
+        }, expiresIn);
+
         commit('setUser', {
           token: responseData.idToken,
           userId: responseData.localId,
@@ -55,7 +60,7 @@ export default {
       state.isLoading = false;
     }
   },
-  tryLogin({ commit }) {
+  tryLogin({ commit, dispatch }) {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const tokenExpiration = localStorage.getItem('tokenExpiration');
@@ -66,21 +71,26 @@ export default {
       return;
     }
 
+    timer = setTimeout(() => {
+      dispatch('logout');
+    }, expiresIn);
+
     commit('setUser', {
       token,
       userId,
-      tokenExpiration,
     });
   },
   logout({ commit }) {
-    commit('setUser', {
-      token: null,
-      userId: null,
-      tokenExpiration: null,
-    });
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
+
+    commit('setUser', {
+      token: null,
+      userId: null,
+    });
+    clearTimeout(timer);
+
     router.replace('/');
   },
 };
