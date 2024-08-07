@@ -52,7 +52,10 @@ export default {
           userId: responseData.localId,
           tokenExpiration: expirationDate,
         });
-        router.replace('/coaches');
+
+        const redirectUrl =
+          '/' + router.currentRoute.value.query.redirect || '/coaches';
+        router.replace(redirectUrl);
       }
     } catch (error) {
       state.error = error.message;
